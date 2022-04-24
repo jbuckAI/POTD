@@ -9,12 +9,23 @@
 #https://www.geeksforgeeks.org/downloading-files-web-using-python/
 import requests
 import ctypes
+import time
+import os
 
-#https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/
-#there is a latest.jpg that is good enough, could consider reading the json file and scrapping for different images
-url = 'https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/latest.jpg'
-r = requests.get(url, allow_redirects=True)
-open('goes_east.jpg ', 'wb').write(r.content)
+filesize = 0
+
+while filesize <= 1000000:
+	#https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/
+	#there is a latest.jpg that is good enough, could consider reading the json file and scrapping for different images
+	url = 'https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/latest.jpg'
+	r = requests.get(url, allow_redirects=True)
+	goesfile = open('goes_east.jpg ', 'wb')
+	goesfile.write(r.content)
+	goesfile.close()
+	statinfo = os.stat('goes_east.jpg')
+	filesize = statinfo.st_size
+	time.sleep(1)
+
 
 
 #update the desktop background
@@ -27,4 +38,5 @@ def changeBG(imagePath):
     ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, imagePath , 3)
     return;
 
+time.sleep(5)
 changeBG(imagePath)
